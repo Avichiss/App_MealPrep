@@ -9,9 +9,23 @@ import {
   Platform,
 } from "react-native";
 
+// Type & Array of Objects
+type Recipe = {
+  id: number;
+  name: string;
+  time: string;
+};
+
+const recipes: Recipe[] = [
+  { id: 1, name: "Honey Garlic Salmon", time: "20 min" },
+  { id: 2, name: "Nasi Goreng", time: "15 min" },
+  { id: 3, name: "Sate Ayam", time: "25 min" },
+];
+
 export default function Index() {
   const [recipe, setRecipe] = useState("");
 
+  // Custom Function
   const handleSave = () => {
     const message = recipe
       ? `Resep kamu: ${recipe}`
@@ -37,20 +51,37 @@ export default function Index() {
 
       <Button title="Click Me" color="#a16207" onPress={handleSave} />
 
-      {/* Card tema cream & gold */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Tema Cream & Gold</Text>
-        <Text style={styles.cardDesc}>
-          Elegan, rapi, cocok untuk demo project
-        </Text>
-      </View>
+      {/* Looping array of objects */}
+      {recipes.map((r) => (
+        <View key={r.id} style={styles.card}>
+          <Text style={styles.cardTitle}>{r.name}</Text>
+          <Text style={styles.cardDesc}>{r.time}</Text>
+        </View>
+      ))}
+
+      {/* Inline style */}
+      <Text style={{ color: "blue", fontSize: 16, marginTop: 20 }}>
+        Resep Sendiri
+      </Text>
+
+      {/* External styles sudah ada di StyleSheet */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#fefce8" },
-  title: { fontSize: 24, fontWeight: "bold", color: "#a16207", marginBottom: 20 },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fefce8",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#a16207",
+    marginBottom: 20,
+  },
   input: {
     borderWidth: 1,
     borderColor: "#a16207",
@@ -67,7 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     alignItems: "center",
-    marginTop: 30,
+    marginTop: 20,
     width: "90%",
   },
   cardTitle: { fontSize: 20, fontWeight: "bold", color: "#a16207" },
