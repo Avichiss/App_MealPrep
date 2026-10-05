@@ -9,7 +9,7 @@ import {
   Platform,
 } from "react-native";
 
-export default function App() {
+export default function Index() {
   const [recipe, setRecipe] = useState("");
 
   const handleSave = () => {
@@ -18,9 +18,9 @@ export default function App() {
       : "Silakan masukkan nama resep terlebih dahulu.";
 
     if (Platform.OS === "web") {
-      window.alert(message); // untuk web
+      window.alert(message);
     } else {
-      Alert.alert("Saved!", message); // untuk Android/iOS
+      Alert.alert("Saved!", message);
     }
   };
 
@@ -28,7 +28,6 @@ export default function App() {
     <View style={styles.container}>
       <Text style={styles.title}>Project Meal Prep</Text>
 
-      {/* Input resep */}
       <TextInput
         placeholder="Type your recipe..."
         style={styles.input}
@@ -36,8 +35,15 @@ export default function App() {
         onChangeText={setRecipe}
       />
 
-      {/* Tombol simpan */}
       <Button title="Click Me" color="#a16207" onPress={handleSave} />
+
+      {/* Card tema cream & gold */}
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Tema Cream & Gold</Text>
+        <Text style={styles.cardDesc}>
+          Elegan, rapi, cocok untuk demo project
+        </Text>
+      </View>
     </View>
   );
 }
@@ -54,4 +60,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginBottom: 20,
   },
+  card: {
+    backgroundColor: "#fff",
+    borderWidth: 2,
+    borderColor: "#facc15", // gold
+    borderRadius: 16,
+    padding: 20,
+    alignItems: "center",
+    marginTop: 30,
+    width: "90%",
+  },
+  cardTitle: { fontSize: 20, fontWeight: "bold", color: "#a16207" },
+  cardDesc: { fontSize: 14, color: "#78350f" },
 });
