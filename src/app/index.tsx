@@ -1,7 +1,3 @@
- {/* 1. ubah yang inline css menjadi external
-  2. tambahkan data recipe minimal 2
-  3. 
-   */}
 import React, { useState } from "react";
 import {
   View,
@@ -24,8 +20,6 @@ const recipes: Recipe[] = [
   { id: 1, name: "Honey Garlic Salmon", time: "20 min" },
   { id: 2, name: "Nasi Goreng", time: "15 min" },
   { id: 3, name: "Sate Ayam", time: "25 min" },
-  { id: 4, name: "Bakso", time: "15 min" },
-  { id: 5, name: "Mie ayam", time: "10 min" }
 ];
 
 export default function Index() {
@@ -47,8 +41,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Project Meal Prep</Text>
-      <Text style={{fontSize: 15, fontWeight: "bold", color: "#a16207", marginBottom: 20}}>Sehat</Text>
-      
+
       <TextInput
         placeholder="Type your recipe..."
         style={styles.input}
@@ -67,7 +60,7 @@ export default function Index() {
       ))}
 
       {/* Inline style */}
-      <Text style={styles.luar}>
+      <Text style={{ color: "blue", fontSize: 16, marginTop: 20 }}>
         Resep Sendiri
       </Text>
 
@@ -83,7 +76,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fefce8",
   },
-  title: { 
+  title: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#a16207",
@@ -107,11 +100,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
     width: "90%",
-  },
-  luar: {
-    color: "blue",
-    fontSize: 16,
-    marginTop: 20,
   },
   cardTitle: { fontSize: 20, fontWeight: "bold", color: "#a16207" },
   cardDesc: { fontSize: 14, color: "#78350f" },
