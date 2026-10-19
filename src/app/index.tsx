@@ -14,7 +14,7 @@ import {
   addRecipe,
   getRecipes,
   Recipe,
-} from "./data/recipes";
+} from "../data/recipes";
 
 export default function Index() {
   const router = useRouter();
