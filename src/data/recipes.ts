@@ -1,9 +1,10 @@
-
-export type Recipe = {
+export interface Recipe {
   id: string;
   name: string;
   time: number;
-};
+  category?: string;
+  image?: string;
+}
 
 let recipes: Recipe[] = [
   { id: "1", name: "Nasi Goreng", time: 15 },
