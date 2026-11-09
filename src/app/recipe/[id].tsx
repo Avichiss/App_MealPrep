@@ -52,12 +52,13 @@ export default function RecipeDetail() {
 
       <Pressable
         style={styles.secondaryButton}
-        onPress={() => router.replace("/" as any)}
+        onPress={() => router.push("/recipe/" + recipe.id as any)}
       >
         <Text style={styles.secondaryButtonText}>
-          Ke Halaman Utama
+          Next
         </Text>
       </Pressable>
+ 
     </View>
   );
 }

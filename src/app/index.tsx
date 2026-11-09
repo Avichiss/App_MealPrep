@@ -23,7 +23,6 @@ export default function Index() {
   const [recipes, setRecipes] = useState<Recipe[]>(getRecipes());
   const [showRecipes, setShowRecipes] = useState(true);
 
-  // Mencatat perubahan nama resep.
   useEffect(() => {
     console.log("Nama resep berubah:", namaResep);
   }, [namaResep]);
