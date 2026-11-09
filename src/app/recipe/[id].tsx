@@ -1,23 +1,70 @@
-
+// [id].tsx
+import { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
+  ActivityIndicator,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { getRecipeById } from "../../data/recipes";
+import { getApiRecipeById } from "../../data/mealApi";
+import { getRecipeById, Recipe } from "../../data/recipes";
 
 export default function RecipeDetail() {
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id } = useLocalSearchParams<{ id?: string | string[] }>();
+  const recipeId = Array.isArray(id) ? id[0] : id;
+  const localRecipe = getRecipeById(recipeId);
+  const [apiResult, setApiResult] = useState<{
+    id: string;
+    recipe?: Recipe;
+    error?: string;
+  }>();
 
-  const recipe = getRecipeById(id);
+  useEffect(() => {
+    if (!recipeId?.startsWith("mealdb-")) {
+      return;
+    }
+
+    let active = true;
+
+    getApiRecipeById(recipeId)
+      .then((result) => {
+        if (active) setApiResult({ id: recipeId, recipe: result });
+      })
+      .catch((err: unknown) => {
+        if (active) {
+          setApiResult({
+            id: recipeId,
+            error: err instanceof Error ? err.message : String(err),
+          });
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [recipeId]);
+
+  const currentApiResult =
+    apiResult?.id === recipeId ? apiResult : undefined;
+  const loading =
+    Boolean(recipeId?.startsWith("mealdb-")) && !currentApiResult;
+  const error = currentApiResult?.error ?? "";
+  const apiRecipe = currentApiResult?.recipe;
+  const recipe = localRecipe ?? apiRecipe;
 
   if (!recipe) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Resep tidak ditemukan</Text>
+        {loading ? (
+          <ActivityIndicator size="large" color="#8b5e34" />
+        ) : (
+          <Text style={styles.title}>
+            {error || "Resep tidak ditemukan"}
+          </Text>
+        )}
 
         <Pressable
           style={styles.button}
@@ -39,9 +86,25 @@ export default function RecipeDetail() {
         Waktu memasak: {recipe.time} menit
       </Text>
 
+      {recipe.category && (
+        <Text style={styles.info}>Kategori: {recipe.category}</Text>
+      )}
+
       <Text style={styles.description}>
-        Ini adalah halaman detail untuk resep {recipe.name}.
+        {recipe.instructions ||
+          `Ini adalah halaman detail untuk resep ${recipe.name}.`}
       </Text>
+
+      {recipe.ingredients && recipe.ingredients.length > 0 && (
+        <>
+          <Text style={styles.subtitle}>Bahan</Text>
+          {recipe.ingredients.map((ingredient, index) => (
+            <Text key={`${index}-${ingredient}`} style={styles.ingredient}>
+              • {ingredient}
+            </Text>
+          ))}
+        </>
+      )}
 
       <Pressable
         style={styles.button}
@@ -78,6 +141,16 @@ const styles = StyleSheet.create({
   info: {
     fontSize: 17,
     marginBottom: 16,
+  },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#704214",
+    marginBottom: 8,
+  },
+  ingredient: {
+    fontSize: 16,
+    lineHeight: 24,
   },
   description: {
     fontSize: 16,

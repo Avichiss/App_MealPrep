@@ -1,6 +1,8 @@
-
+import { ActivityIndicator } from "react-native";
+import { getApiRecipes } from "../data/mealApi";
 import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   ScrollView,
   StyleSheet,
@@ -15,31 +17,54 @@ import {
   getRecipes,
   Recipe,
 } from "../data/recipes";
+import { getApiRecipes } from "../data/mealApi";
 
 export default function Index() {
   const router = useRouter();
 
-  const [namaResep, setNamaResep] = useState("");
+  const [rahasia, setNama] = useState("");
   const [recipes, setRecipes] = useState<Recipe[]>(getRecipes());
   const [showRecipes, setShowRecipes] = useState(true);
+  const [apiRecipes, setApiRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    console.log("Nama resep berubah:", namaResep);
-  }, [namaResep]);
+    console.log("Nama resep berubah:", rahasia);
+  }, [rahasia]);
+
+  useEffect(() => {
+    const loadApiRecipes = async () => {
+      try {
+        const data = await getApiRecipes("ayam");
+        setApiRecipes(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : String(err));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadApiRecipes();
+  }, []);
 
   function handleSave() {
-    const namaBersih = namaResep.trim();
+    const namaBersih = rahasia.trim();
 
     if (!namaBersih) {
       Alert.alert("Perhatian", "Nama resep tidak boleh kosong.");
       return;
     }
 
-    addRecipe(namaBersih);
-    setRecipes(getRecipes());
-    setNamaResep("");
+    const addedRecipe = addRecipe(namaBersih);
 
-    Alert.alert("Berhasil", "Resep berhasil disimpan.");
+    if (!addedRecipe) {
+      Alert.alert("Perhatian", "Nama resep tidak valid.");
+      return;
+    }
+
+    setRecipes(getRecipes());
+    setNama("");
   }
 
   return (
@@ -54,16 +79,16 @@ export default function Index() {
       <TextInput
         style={styles.input}
         placeholder="Contoh: Nasi Goreng"
-        value={namaResep}
-        onChangeText={setNamaResep}
+        value={rahasia}
+        onChangeText={setNama}
       />
 
       <View style={styles.preview}>
         <Text style={styles.previewLabel}>Pratinjau resep</Text>
         <Text style={styles.previewName}>
-          {namaResep.trim() || "Resep kamu akan muncul di sini"}
+          {rahasia.trim() || "Resep kamu akan muncul di sini"}
         </Text>
-        <Text>Jumlah karakter: {namaResep.length}</Text>
+        <Text>Jumlah karakter: {rahasia.length}</Text>
       </View>
 
       <Pressable style={styles.primaryButton} onPress={handleSave}>
@@ -91,7 +116,10 @@ export default function Index() {
             key={recipe.id}
             style={styles.recipeCard}
             onPress={() =>
-              router.push(("/recipe/" + recipe.id) as any)
+              router.push({
+                pathname: "/recipe/[id]",
+                params: { id: recipe.id },
+              })
             }
           >
             <Text style={styles.recipeName}>{recipe.name}</Text>
@@ -100,9 +128,30 @@ export default function Index() {
           </Pressable>
         ))}
 
+      <Text style={styles.sectionTitle}>Resep dari API</Text>
+
+      {loading && <ActivityIndicator size="large" color="#8b5e34" />}
+      {error !== "" && <Text style={styles.errorText}>{error}</Text>}
+
+      {apiRecipes.map((recipe) => (
+        <Pressable
+          key={recipe.id}
+          style={styles.recipeCard}
+          onPress={() =>
+            router.push({
+              pathname: "/recipe/[id]",
+              params: { id: recipe.id },
+            })
+          }
+        >
+          <Text style={styles.recipeName}>{recipe.name}</Text>
+          <Text>Kategori: {recipe.category}</Text>
+        </Pressable>
+      ))}
+
       <Pressable
         style={styles.aboutButton}
-        onPress={() => router.push("/about" as any)}
+        onPress={() => router.push({ pathname: "/about" })}
       >
         <Text style={styles.aboutButtonText}>Tentang Aplikasi</Text>
       </Pressable>
@@ -209,6 +258,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
     color: "#8b5e34",
     fontWeight: "600",
+  },
+  errorText: {
+    color: "red",
   },
   aboutButton: {
     marginTop: 12,
