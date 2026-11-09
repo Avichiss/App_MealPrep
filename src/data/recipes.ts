@@ -12,22 +12,14 @@ let recipes: Recipe[] = [
   { id: "3", name: "Salad Sayur", time: 10 },
 ];
 
-const normalizeRecipeName = (name: string): string => name.trim();
-
 export function getRecipes(): Recipe[] {
-  return recipes.map((recipe) => ({ ...recipe }));
+  return [...recipes];
 }
 
-export function addRecipe(name: string): Recipe | undefined {
-  const normalizedName = normalizeRecipeName(name);
-
-  if (!normalizedName) {
-    return undefined;
-  }
-
+export function addRecipe(name: string): Recipe {
   const newRecipe: Recipe = {
     id: Date.now().toString(),
-    name: normalizedName,
+    name,
     time: 15,
   };
 
@@ -35,12 +27,6 @@ export function addRecipe(name: string): Recipe | undefined {
   return newRecipe;
 }
 
-export function getRecipeById(id?: string | string[]): Recipe | undefined {
-  const normalizedId = Array.isArray(id) ? id[0] : id;
-
-  if (!normalizedId) {
-    return undefined;
-  }
-
-  return recipes.find((recipe) => recipe.id === normalizedId);
+export function getRecipeById(id: string): Recipe | undefined {
+  return recipes.find((recipe) => recipe.id === id);
 }
