@@ -1,5 +1,3 @@
-import { ActivityIndicator } from "react-native";
-import { getApiRecipes } from "../data/mealApi";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
