@@ -1,11 +1,5 @@
-// about.tsx
 import { useRouter } from "expo-router";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function About() {
   const router = useRouter();
@@ -15,24 +9,20 @@ export default function About() {
       <Text style={styles.title}>Tentang Meal Prep</Text>
 
       <Text style={styles.description}>
-        Project Meal Prep adalah aplikasi sederhana untuk
-        mencatat resep makanan dan melihat waktu memasak.
+        Project Meal Prep adalah aplikasi untuk mencatat resep, menjelajah resep
+        dari API, dan menyimpan resep/meal plan pribadi per akun menggunakan
+        Supabase (auth, sesi aman, dan proteksi data dengan RLS).
       </Text>
 
-      <Pressable
-        style={styles.button}
-        onPress={() => router.back()}
-      >
+      <Pressable style={styles.button} onPress={() => router.back()}>
         <Text style={styles.buttonText}>Kembali</Text>
       </Pressable>
 
       <Pressable
         style={styles.secondaryButton}
-        onPress={() => router.replace("/" as any)}
+        onPress={() => router.replace("/(app)")}
       >
-        <Text style={styles.secondaryButtonText}>
-          Ke Halaman Utama
-        </Text>
+        <Text style={styles.secondaryButtonText}>Ke Halaman Utama</Text>
       </Pressable>
     </View>
   );
