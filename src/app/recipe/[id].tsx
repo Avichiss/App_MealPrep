@@ -1,6 +1,5 @@
-// [id].tsx
-import { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -115,10 +114,10 @@ export default function RecipeDetail() {
 
       <Pressable
         style={styles.secondaryButton}
-        onPress={() => router.push("/recipe/" + recipe.id as any)}
+        onPress={() => router.push("/" as any)}
       >
         <Text style={styles.secondaryButtonText}>
-          Next
+          Kembali Ke Utama
         </Text>
       </Pressable>
  

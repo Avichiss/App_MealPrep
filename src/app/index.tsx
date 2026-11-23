@@ -34,7 +34,7 @@ export default function Index() {
   useEffect(() => {
     const loadApiRecipes = async () => {
       try {
-        const data = await getApiRecipes("ayam");
+        const data = await getApiRecipes("salad");
         setApiRecipes(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err));
@@ -146,7 +146,7 @@ export default function Index() {
           <Text>Kategori: {recipe.category}</Text>
         </Pressable>
       ))}
-
+      
       <Pressable
         style={styles.aboutButton}
         onPress={() => router.push({ pathname: "/about" })}
