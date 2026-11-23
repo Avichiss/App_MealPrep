@@ -4,6 +4,8 @@ export interface Recipe {
   time: number;
   category?: string;
   image?: string;
+  ingredients?: string[];
+  instructions?: string;
 }
 
 let recipes: Recipe[] = [

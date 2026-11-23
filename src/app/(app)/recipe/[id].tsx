@@ -1,4 +1,3 @@
-// [id].tsx
 import { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
@@ -8,14 +7,14 @@ import {
   Text,
   View,
 } from "react-native";
-import { getApiRecipeById } from "../../data/mealApi";
-import { getRecipeById, Recipe } from "../../data/recipes";
+import { getApiRecipeById } from "@/data/mealApi";
+import { getRecipeById, Recipe } from "@/data/recipes";
 
 export default function RecipeDetail() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string | string[] }>();
   const recipeId = Array.isArray(id) ? id[0] : id;
-  const localRecipe = getRecipeById(recipeId);
+  const localRecipe = recipeId ? getRecipeById(recipeId) : undefined;
   const [apiResult, setApiResult] = useState<{
     id: string;
     recipe?: Recipe;
@@ -47,10 +46,8 @@ export default function RecipeDetail() {
     };
   }, [recipeId]);
 
-  const currentApiResult =
-    apiResult?.id === recipeId ? apiResult : undefined;
-  const loading =
-    Boolean(recipeId?.startsWith("mealdb-")) && !currentApiResult;
+  const currentApiResult = apiResult?.id === recipeId ? apiResult : undefined;
+  const loading = Boolean(recipeId?.startsWith("mealdb-")) && !currentApiResult;
   const error = currentApiResult?.error ?? "";
   const apiRecipe = currentApiResult?.recipe;
   const recipe = localRecipe ?? apiRecipe;
@@ -61,18 +58,14 @@ export default function RecipeDetail() {
         {loading ? (
           <ActivityIndicator size="large" color="#8b5e34" />
         ) : (
-          <Text style={styles.title}>
-            {error || "Resep tidak ditemukan"}
-          </Text>
+          <Text style={styles.title}>{error || "Resep tidak ditemukan"}</Text>
         )}
 
         <Pressable
           style={styles.button}
-          onPress={() => router.replace("/" as any)}
+          onPress={() => router.replace("/(app)")}
         >
-          <Text style={styles.buttonText}>
-            Ke Halaman Utama
-          </Text>
+          <Text style={styles.buttonText}>Ke Halaman Utama</Text>
         </Pressable>
       </View>
     );
@@ -82,9 +75,7 @@ export default function RecipeDetail() {
     <View style={styles.container}>
       <Text style={styles.title}>{recipe.name}</Text>
 
-      <Text style={styles.info}>
-        Waktu memasak: {recipe.time} menit
-      </Text>
+      <Text style={styles.info}>Waktu memasak: {recipe.time} menit</Text>
 
       {recipe.category && (
         <Text style={styles.info}>Kategori: {recipe.category}</Text>
@@ -106,22 +97,9 @@ export default function RecipeDetail() {
         </>
       )}
 
-      <Pressable
-        style={styles.button}
-        onPress={() => router.back()}
-      >
+      <Pressable style={styles.button} onPress={() => router.back()}>
         <Text style={styles.buttonText}>Kembali</Text>
       </Pressable>
-
-      <Pressable
-        style={styles.secondaryButton}
-        onPress={() => router.push("/recipe/" + recipe.id as any)}
-      >
-        <Text style={styles.secondaryButtonText}>
-          Next
-        </Text>
-      </Pressable>
- 
     </View>
   );
 }
@@ -166,17 +144,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#ffffff",
-    fontWeight: "bold",
-  },
-  secondaryButton: {
-    borderWidth: 1,
-    borderColor: "#8b5e34",
-    padding: 14,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  secondaryButtonText: {
-    color: "#704214",
     fontWeight: "bold",
   },
 });
