@@ -41,7 +41,6 @@ function fetchMeals(path: string): Promise<Meal[]> {
     const url = `${BASE_URL}/${path}`;
     console.log("Fetching:", url);
 
-    
     fetch(url)
       .then((response) => {
         console.log("Status:", response.status);
